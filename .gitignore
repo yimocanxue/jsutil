@@ -1,0 +1,17 @@
+/dist
+.project
+
+#sass cache
+.sass-cache/
+
+#node package
+node_modules/
+
+
+*.map
+.idea/
+
+.DS_Store
+.travis.yml
+~
+
