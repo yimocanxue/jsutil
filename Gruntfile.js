@@ -1,5 +1,5 @@
 /*!
- * carph-app's Gruntfile
+ * jsutil's Gruntfile
  */
 
 /* jshint node: true */
@@ -19,77 +19,35 @@ module.exports = function(grunt) {
 
 		// Metadata.
 		meta: {
-			jsSrcPath: 'src/script/',
-			jsDistPath: 'dist/script/',
-			cssDistPath: 'dist/css/',
-			sassPath: 'src/sass/',
-			viewsPath: 'views/'
+			distPath: 'dist/',
+			srcPath: 'src/'
 		},
 
 		banner: '/*!\n' +
 			' * =====================================================\n' +
-			' * Carph-app v<%= pkg.version %> (<%= pkg.homepage %>)\n' +
+			' * jsutil v<%= pkg.version %> (<%= pkg.homepage %>)\n' +
 			' * =====================================================\n' +
 			' */\n',
 
 		clean: {
-			all: ['<%= meta.jsDistPath %>','<%= meta.cssDistPath %>'],
-			dev: ['<%= meta.jsDistPath %>','<%= meta.cssDistPath %>/*.css','!<%= meta.cssDistPath %>carph-app-mui*.css'],
-			sourceMap: ['<%= meta.cssDistPath %>/**/*.map']
+			all: ['<%= meta.distPath %>**/*.js','<%= meta.distPath %>**/*.map']
 		},
 
-
-		sass: {
+		concat: {
 			options: {
-				banner: '<%= banner %>',
-				style: 'expanded',
-				unixNewlines: true
+					banner: '<%= banner %>'
 			},
-			dist: {
-				files: [
-					{
-						'<%= meta.cssDistPath %><%= pkg.name %>-mui.css': '<%= meta.sassPath %>mui/mui.scss',
-					}
-				]
-			},
-			biz:{
-				files:[
-					{
-						'<%= meta.cssDistPath %><%= pkg.name %>-biz.css': '<%= meta.sassPath %>biz/<%= pkg.name %>-biz.scss',
-					}
-				]
+			all: {
+				src: [
+					'<%= meta.srcPath %>__CK.js',
+					'<%= meta.srcPath %>__ST.js',
+					'<%= meta.srcPath %>__DT.js',
+					'<%= meta.srcPath %>*.js',
+				],
+				dest: '<%= meta.distPath %>__<%= pkg.name %>.js',
 			}
 		},
 
-		copy: {
-			fonts: {
-				expand: true,
-				src: 'fonts/mui*.ttf',
-				dest: '<%= meta.distPath %>/'
-			},
-			examples: {
-				expand: true,
-				cwd: '<%= meta.distPath %>',
-				src: ['**/mui*'],
-				dest: '<%= meta.examplesPath %>'
-			}
-		},
-
-		cssmin: {
-			options: {
-				banner: '', // set to empty; see bellow
-				keepSpecialComments: '*', // set to '*' because we already add the banner in sass
-				sourceMap: false
-			},
-			mui: {
-				src: '<%= meta.cssDistPath %><%= pkg.name %>-mui.css',
-				dest: '<%= meta.cssDistPath %><%= pkg.name %>-mui.min.css'
-			},
-			biz: {
-				src: '<%= meta.cssDistPath %><%= pkg.name %>-biz.css',
-				dest: '<%= meta.cssDistPath %><%= pkg.name %>-biz.min.css'
-			}
-		},
 
 		uglify: {
 			options: {
@@ -98,9 +56,9 @@ module.exports = function(grunt) {
 				mangle: true,
 				preserveComments: false
 			},
-			mui: {
-				src: '<%= concat.mui.dest %>',
-				dest: '<%= meta.distPath %>js/<%= pkg.name %>.min.js'
+			all: {
+				src: '<%= meta.distPath %>__<%= pkg.name %>.js',
+				dest: '<%= meta.distPath %>__<%= pkg.name %>.min.js'
 			}
 		},
 
@@ -114,8 +72,7 @@ module.exports = function(grunt) {
 			},
 			scripts: {
 				files: [
-					'<%= meta.sassPath %>**/*.scss',
-					'<%= meta.jsSrcPath %>**/*.js',
+					'<%= meta.srcPath %>**/*.js',
 				],
 				tasks: 'dev'
 			}
@@ -148,14 +105,6 @@ module.exports = function(grunt) {
 			}
 		},
 
-		csslint: {
-			options: {
-				csslintrc: 'sass/.csslintrc'
-			},
-			src: [
-				'<%= meta.distPath %>/css/<%= pkg.name %>.css',
-			]
-		},
 		sed: {
 			versionNumber: {
 				pattern: (function() {
@@ -172,19 +121,11 @@ module.exports = function(grunt) {
 		scope: 'devDependencies'
 	});
 	require('time-grunt')(grunt);
+
 	// Default task(s).
-	grunt.registerTask('cleanAll', ['clean']);
-	grunt.registerTask('dist-css', ['sass', 'cssmin', 'clean:sourceMap']);
-	//grunt.registerTask('dist-js', ['concat', 'build-namespace', 'uglify']);
-	
-	grunt.registerTask('dist', ['clean:all', 'dist-css']);
-	grunt.registerTask('build', ['dist']);
-	grunt.registerTask('default', ['dist']);
+	grunt.registerTask('build', ['clean','concat','uglify']);
+	grunt.registerTask('default', ['build']);
 
-	grunt.registerTask('dev',['clean:dev','sass:biz','cssmin:biz','clean:sourceMap']);
-
-
-	//grunt.registerTask('build-namespace', generateNamespace);
 
 	grunt.registerTask('server', ['dev','watch']);
 
