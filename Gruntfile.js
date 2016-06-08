@@ -42,6 +42,7 @@ module.exports = function(grunt) {
 					'<%= meta.srcPath %>__CK.js',
 					'<%= meta.srcPath %>__ST.js',
 					'<%= meta.srcPath %>__DT.js',
+					'<%= meta.srcPath %>__CH.js',
 					'<%= meta.srcPath %>*.js',
 				],
 				dest: '<%= meta.distPath %>__<%= pkg.name %>.js',
