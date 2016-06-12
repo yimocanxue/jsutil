@@ -74,6 +74,31 @@ String.prototype = {
     */
     replaceAll:function(s1,s2){
         return this.replace(new RegExp(s1,"gm"),s2);
-    } 
+    },
+
+    /**
+     * 单词首字母大写
+     * @param str
+     * @returns {string}
+    */
+    upperFirstChar: function () {
+        var reg = /\b(\w)|\s(\w)/g;
+        return this.toLowerCase().replace(reg, function (m) {
+            return m.toUpperCase();
+        });
+    },
+
+
+    /**
+     * 截取字符串
+     * @param count {int} 截取个数
+     * @param suffix {string} 后缀
+     * @returns {string}
+     */
+    truncate: function(count,suffix) {
+        suffix = suffix | "...";
+        return this.length > count ? this.substring(0, count) + suffix : this;
+    },
+ 
 
 };
