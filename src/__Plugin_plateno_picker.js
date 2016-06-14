@@ -10,7 +10,7 @@
     };
 
     keyboardPicker.prototype = {
-        
+
         __init:function()
         {
 
@@ -200,6 +200,12 @@
                     tempUl = null;
                 }
             }
+            
+            //阻止冒泡关闭键盘
+            tempDiv.addEventListener("tap",function(e){
+                e.stopPropagation();    
+                return false;
+            });
             document.body.appendChild(tempDiv);
 
 
