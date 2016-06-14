@@ -692,6 +692,9 @@ var __CH = {
             for(var i=0;i<childNodes.length;i++){
                 childNodes[i].addEventListener("tap",function(e){
                     
+                    //让其它输入框失去焦点，关闭系统键盘
+                    that.__inputBlur();
+
                     var index = that.__getElemIndex(this,childNodes);
     
                     that.__activeInput(index);
@@ -707,6 +710,23 @@ var __CH = {
                 that.__hideSoftKeyBorad();
             });
             return this;
+        },
+
+        __inputBlur:function()
+        {
+            var inputList = document.getElementsByTagName("input");
+            var areaList = document.getElementsByTagName("textarea");
+            if(inputList.length > 0){
+                for (var x =0, len = inputList.length; x < len; x++){
+                    inputList[x].blur();
+                }
+            }
+            if(areaList.length > 0){
+
+                for (var y =0, len = areaList.length; y < len; y++){
+                    areaList[y].blur();
+                }
+            }
         },
 
         __nextLi: function()
