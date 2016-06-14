@@ -180,15 +180,13 @@
 
                 if((i + 1) % 10 === 0 || i == length -1 ){
 
-                    //处理最后一排按键
+                    //处理最后一排按键居中
                     var mod = length % 10;
                     if(i== length -1 &&  mod > 0){
                         var dif = 10 - mod;
                         var offset = (((dif/2)/10)*100).toFixed(2);
                         tempUl.style.margin="0 "+offset+"%";
-                    }
-                        //tempUl.setAttribute('class','last-m1');
-   
+                    }   
 
                     tempDiv.appendChild(tempUl);
 
@@ -200,7 +198,7 @@
                     tempUl = null;
                 }
             }
-            
+
             //阻止冒泡关闭键盘
             tempDiv.addEventListener("tap",function(e){
                 e.stopPropagation();    
