@@ -334,6 +334,25 @@ String.prototype.truncate = function(count,suffix)
     return this.length > count ? this.substring(0, count) + suffix : this;
 };
 
+var __ST = {
+
+    /**
+    * 获取随机字符串
+    */
+    random:function(len)
+    {
+        var chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        var res = "";
+        for(var i = 0; i < len; i ++){
+            res += chars[Math.ceil(Math.random()*35)];
+        }
+        return res;
+    }
+
+};
+
+
+
 
 /**
 *   扩展JS内容Date对象
