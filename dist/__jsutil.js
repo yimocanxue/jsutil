@@ -188,7 +188,7 @@ var __CK = {
  * @param  {String} charset utf-8, utf-16
  * @return {Number}
  */
-String.prototype.sizeof = function()
+String.prototype.sizeof = function(charset)
 {
     
     var that = this,
@@ -1020,7 +1020,7 @@ var __URL = {
         var reg = new RegExp("(^|&)"+ name +"=([^&]*)(&|$)");
         var r = window.location.search.substr(1).match(reg);
         if(!__CK.isNull(r))
-            return  unescape(r[2]); 
+            return  decodeURIComponent(r[2]); 
         return null;
     },
 

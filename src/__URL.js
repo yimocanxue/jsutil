@@ -23,7 +23,7 @@ var __URL = {
         var reg = new RegExp("(^|&)"+ name +"=([^&]*)(&|$)");
         var r = window.location.search.substr(1).match(reg);
         if(!__CK.isNull(r))
-            return  unescape(r[2]); 
+            return  decodeURIComponent(r[2]); 
         return null;
     },
 

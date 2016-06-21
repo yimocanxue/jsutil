@@ -24,7 +24,7 @@
  * @param  {String} charset utf-8, utf-16
  * @return {Number}
  */
-String.prototype.sizeof = function()
+String.prototype.sizeof = function(charset)
 {
     
     var that = this,
