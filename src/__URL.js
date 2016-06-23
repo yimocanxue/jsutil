@@ -34,34 +34,19 @@ var __URL = {
      * @param ref {string} 要删除的变量名
      * @return {string} 删除变量后的url
      */
-    deleteQuery: function(url, ref) {
-        var str = "";
-        if (~url.indexOf('?')) {
-            str = url.substr(url.indexOf('?') + 1);
-        }
-        else {
+    deleteQuery: function(url, ref) 
+    {
+        if (url.indexOf('?') == -1) {
             return url;
         }
-        var arr = "";
-        var returnurl = "";
-        var setparam = "";
-        if (~str.indexOf('&')) {
-            arr = str.split('&');
-            for (var i in arr) {
-                if (arr[i].split('=')[0] != ref) {
-                    returnurl = returnurl + arr[i].split('=')[0] + "=" + arr[i].split('=')[1] + "&";
-                }
-            }
-            return url.substr(0, url.indexOf('?')) + "?" + returnurl.substr(0, returnurl.length - 1);
+        var reg1 = new RegExp("\\?" + ref + "=\\w+");
+        var reg2 = new RegExp("\\&" + ref + "=\\w+");
+        if(reg1.test(url)){
+            return url.replace(reg1,"").replace("&","?");
         }
-        else {
-            arr = str.split('=');
-            if (arr[0] == ref) {
-                return url.substr(0, url.indexOf('?'));
-            }
-            else {
-                return url;
-            }
+        if(reg2.test(url)){
+            return url.replace(reg2,"");
         }
+        return url;    
     },
 };
