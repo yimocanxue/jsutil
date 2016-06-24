@@ -1068,24 +1068,39 @@ var __URL = (function(win,undefined){
      */
     $.setQuery = function() 
     {
-        if(arguments.length < 2){
-            throw "number off arguments is error";
-        }
-
         var url = this.url;
-        var name = arguments[0];
-        var value = arguments[1];
-
-        if(arguments.length > 2){
-            url = arguments[0];
-            name = arguments[1];
-            value = arguments[2];
+        var params = {};
+        if(arguments.length == 1 && typeof arguments[0] != "object"){
+            throw "arguments is error";
         }
 
-        var new_url = this.deleteQuery(url,name);
-
-        return ~new_url.indexOf("?") ? new_url + "&" + name + "=" + value : new_url + "?" + name + "=" + value;
- 
+        if(arguments.length == 1){
+            params = arguments[0];
+        }
+        else if(arguments.length == 2){
+            if(typeof arguments[1] == 'object'){
+                url = arguments[0];
+                params = arguments[1];
+            }else{
+                params[arguments[0]] = arguments[1];
+            }
+        }
+        else if(arguments.length == 3){
+            url = arguments[0];
+            params[arguments[1]] = arguments[2];
+        }else{
+            throw "arguments is error";
+        }
+        
+        var new_url = url;
+        for(var key in params){
+            new_url = this.deleteQuery(new_url,key);
+            new_url = ~new_url.indexOf("?") ? 
+                        new_url + "&" + key + "=" + encodeURIComponent(params[key]) : 
+                        new_url + "?" + key + "=" + encodeURIComponent(params[key]);
+        }
+        
+        return new_url;
     };
 
 
@@ -1103,5 +1118,5 @@ var __URL = (function(win,undefined){
     };
 
     return $;
-    
+
 })(window);
