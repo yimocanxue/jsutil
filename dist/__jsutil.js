@@ -1017,10 +1017,16 @@ var __URL = (function(win,undefined){
      * @param name {string} 变量名
      * @return {string|null} 变量值
      */
-    $.getQuery = function(name)
+    $.getQuery = function()
     {
-        var reg = new RegExp("(\\?|\\&)" + name + "=(\\w+)");
-        var r = this.url.match(reg);
+        var url = this.url;
+        var name = arguments[0];
+        if(arguments.length >1){
+            url = arguments[0];
+            name = arguments[1];
+        }
+        var reg = new RegExp("(\\?|\\&)" + name + "=([^\\&]*)(\\&|$)");
+        var r = url.match(reg);
         if(!__CK.isNull(r))
             return  decodeURIComponent(r[2]); 
         return null;
@@ -1045,8 +1051,8 @@ var __URL = (function(win,undefined){
         if (url.indexOf('?') == -1) {
             return url;
         }
-        var reg1 = new RegExp("\\?" + name + "=\\w+");
-        var reg2 = new RegExp("\\&" + name + "=\\w+");
+        var reg1 = new RegExp("\\?" + name + "=([^\\&]*)");
+        var reg2 = new RegExp("\\&" + name + "=([^\\&]*)");
         if(reg1.test(url)){
             return url.replace(reg1,"").replace("&","?");
         }

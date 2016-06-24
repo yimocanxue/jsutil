@@ -9,8 +9,9 @@
 <body>
 
 <script type="text/javascript">
-
-    console.log(__URL.setQuery('a','中国'));
+    var url = __URL.setQuery({a:1,b:'中国',c:'%23ddad23%',d:'这是什么东西'});
+    console.log(__URL.deleteQuery(url,"d"));
+    console.log(__URL.getQuery(url,'b'));
 </script>
 </body>
 </html>
