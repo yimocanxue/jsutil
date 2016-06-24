@@ -721,7 +721,7 @@ var __CH = {
             var keys = this.elem.getElementsByTagName("li");
             if(typeof plateNo==='string'&& plateNo!==''){                
                 for(var i=0;i<7;i++){
-                    keys[i].innerHTML = plateNo[i];
+                    keys[i].innerHTML = plateNo[i]||"";     //修复资料中车牌不全时显示undefined的问题
                 }
                 this.plateInput.value = plateNo;
             } else {
