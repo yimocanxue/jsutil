@@ -126,6 +126,18 @@ var __URL = (function(win,undefined){
             replace(/\)/g, '%29').replace(/\*/g, '%2A').replace(/%20/g, '+');  
     };
 
+
+    /**
+    *  获取当前URL或指定URL的文件名
+    */
+    $.getFilename = function(url)
+    {
+        url = url||this.url;
+        var filename = url.substr(url.lastIndexOf("/") + 1);
+        filename = ~filename.indexOf("?") ? filename.substr(0,filename.indexOf("?")) : filename;
+        return  filename;
+    };
+
     return $;
 
 })(window);
