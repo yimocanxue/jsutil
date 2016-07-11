@@ -138,6 +138,16 @@ var __URL = (function(win,undefined){
         return  filename;
     };
 
+    /**
+    * 返回当前应用的根目录
+    */
+    $.getRootPath = function()
+    { 
+        var strPath = window.document.location.pathname; 
+        var postPath = strPath.substring(0,strPath.substr(1).indexOf('/')+1); 
+        return (postPath + "/"); 
+    }; 
+
     return $;
 
 })(window);
