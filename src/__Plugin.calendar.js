@@ -9,6 +9,7 @@
             pastSelectable:false,   //过期是否可选择？
             todaySelectable:false,  //今日是否可选择
             restCb:null,            //重置回调函数
+            tapCb:null              //单击可选日期时回调
         };
         //Object.assign(defaults,options);        //android不兼容
 
@@ -165,6 +166,7 @@
                                 var current_day = parseInt(this.innerHTML);
                                 var isSelect = this.classList.contains("selected") ? false : true;
                                 this.classList.toggle("selected");
+
                                 if(isSelect){
                                     self.options.selected.push(current_day);
                                 }else{
@@ -175,6 +177,8 @@
                                         }
                                     }
                                 }
+                                var fulldate  = self.year +"-" + self.month  + "-" + current_day;
+                                self.options.tapCb&&self.options.tapCb(fulldate,isSelect);
                             });   
                         }
                         
@@ -190,29 +194,6 @@
             ul.addEventListener("swiperight",function(e){
                 self.goLastMonth();
             });
-            /*
-            ul.addEventListener("drag",function(e){
-                //console.log(e);
-                ul.style.marginLeft = e.detail.distance + 'px';
-            });
-            ul.addEventListener("dragend",function(e){
-                //console.log(e);
-                var start = 100;
-                ul.style.marginLeft = start + '%';
-                
-       
-                var time = 0;
-                var timer = setInterval(function(){
-                    if(time < 500){
-                        time = time + 50;
-                        ul.style.marginLeft = ((Math.ceil(time / 500) * 100) + start )+ "%";  
-                    }else{
-                        clearInterval(timer);
-                    }
-                    
-                },50);
-
-            });*/
 
         },
         getSelected:function(){
