@@ -5,8 +5,9 @@
         var self = this;
         var defaults = {
             month:'current',        //显示月份 默认为当前月份 next表示下月 last表示上月
-            selected:[],              //选中的日期
+            selected:[],            //选中的日期
             pastSelectable:false,   //过期是否可选择？
+            todaySelectable:false,  //今日是否可选择
             restCb:null,            //重置回调函数
         };
         //Object.assign(defaults,options);        //android不兼容
@@ -153,7 +154,7 @@
                             day_class = 'selected';
                         }
                         if(self.year == current_year && self.month == current_month && day == current_date){
-
+                            selectable = self.options.todaySelectable;     
                             day_class = 'today';
                         }
                         li.className = day_class;
