@@ -1004,23 +1004,14 @@ var __URL = (function(win,undefined){
 
                         if(selectable){
                             li.addEventListener("tap",function(e){
-                                //console.log(self.year +"-" + self.month + "-" + this.innerHTML);
+
                                 var current_day = parseInt(this.innerHTML);
                                 var isSelect = this.classList.contains("selected") ? false : true;
-                                this.classList.toggle("selected");
+                                
+                                self.setDayChecked(this);
 
-                                if(isSelect){
-                                    self.options.selected.push(current_day);
-                                }else{
-                                    for(var i=0; i < self.options.selected.length; i++) {
-                                        if(self.options.selected[i] == current_day) {
-                                          self.options.selected.splice(i, 1);
-                                          break;
-                                        }
-                                    }
-                                }
                                 var fulldate  = self.year +"-" + self.month  + "-" + current_day;
-                                self.options.tapCb&&self.options.tapCb(fulldate,isSelect);
+                                self.options.tapCb&&self.options.tapCb(this,fulldate,isSelect);
                             });   
                         }
                         
@@ -1037,6 +1028,24 @@ var __URL = (function(win,undefined){
                 self.goLastMonth();
             });
 
+        },
+
+        setDayChecked:function(el)
+        {
+            var current_day = parseInt(el.innerHTML);
+            var isSelect = el.classList.contains("selected") ? false : true;
+            el.classList.toggle("selected");
+
+            if(isSelect){
+                self.options.selected.push(current_day);
+            }else{
+                for(var i=0; i < self.options.selected.length; i++) {
+                    if(self.options.selected[i] == current_day) {
+                      self.options.selected.splice(i, 1);
+                      break;
+                    }
+                }
+            }
         },
         getSelected:function(){
             return this.options.selected;
