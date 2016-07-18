@@ -1006,10 +1006,10 @@ var __URL = (function(win,undefined){
                         
 
                         //特殊日期的配置
-                        for(var j = self.daysOtps.length - 1 ; j >= 0 ; j--){
-                            if(self.daysOtps[j].date == fullDate){
-                                day_class = day_class + " " + self.daysOtps[j].cls;
-                                selectable = self.daysOtps[j].selectable;
+                        for(var j = self.options.daysOtps.length - 1 ; j >= 0 ; j--){
+                            if(self.options.daysOtps[j].date == fullDate){
+                                day_class = day_class + " " + self.options.daysOtps[j].cls;
+                                selectable = self.options.daysOtps[j].selectable;
                             }
                         }
 
