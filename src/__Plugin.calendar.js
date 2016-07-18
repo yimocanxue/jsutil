@@ -5,7 +5,8 @@
         var self = this;
         var defaults = {
             month:'current',        //显示月份 默认为当前月份 next表示下月 last表示上月
-            selected:[],            //选中的日期
+            selected:[],            //选中的日期 
+            daysOtps:[],            //针对具体日期的配置[{date:'2016-7-10',selectable:false,cls:'checking'},...]
             pastSelectable:false,   //过期是否可选择？
             todaySelectable:false,  //今日是否可选择
             restCb:null,            //重置回调函数
@@ -139,12 +140,13 @@
             self.maxLine = max_line;
             self.days = days;
 
-            var day = 1,day_class,selectable;
+            var day = 1,fullDate,day_class,selectable;
             for(var i = 0;i < max_line * 7;i++){
                 var li = doc.createElement("li");
                 if(day <= days){
                     if(i >= week_start){
                         li.innerHTML = day;
+                        fullDate = self.year +"-" + self.month  + "-" + day;        //完整日期
                         day_class = '';
                         selectable = true;  //日历是否可选择
                         if(current_year > self.year ||(current_year == self.year && current_month > self.month) || (current_year == self.year && current_month == self.month && current_date > day)){
@@ -152,13 +154,23 @@
                             selectable = self.options.pastSelectable;
                         }
 
-                        if(~self.options.selected.indexOf(self.year +"-" + self.month  + "-" + day)){
+                        if(~self.options.selected.indexOf(fullDate)){
                             day_class = 'selected';
                         }
                         if(self.year == current_year && self.month == current_month && day == current_date){
                             selectable = self.options.todaySelectable;     
                             day_class = 'today';
                         }
+                        
+
+                        //特殊日期的配置
+                        for(var j = self.daysOtps.length - 1 ; j >= 0 ; j--){
+                            if(self.daysOtps[j].date == fullDate){
+                                day_class = day_class + " " + self.daysOtps[j].cls;
+                                selectable = self.daysOtps[j].selectable;
+                            }
+                        }
+
                         li.className = day_class;
 
                         if(selectable){
