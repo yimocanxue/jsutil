@@ -38,7 +38,7 @@
 
             this.elem.removeChild(this.elem.querySelector(".calendar-main"));   //先删除
 
-            this.options.selected = [];     //清空已选择日期
+            //this.options.selected = [];     //清空已选择日期
             this.setDateList(); 
 
             //重置回调
@@ -196,11 +196,12 @@
             var isSelect = el.classList.contains("selected") ? false : true;
             el.classList.toggle("selected");
 
+            var fulldate  = self.year +"-" + self.month  + "-" + current_day;
             if(isSelect){
-                self.options.selected.push(current_day);
+                self.options.selected.push(fulldate);
             }else{
                 for(var i=0; i < self.options.selected.length; i++) {
-                    if(self.options.selected[i] == current_day) {
+                    if(self.options.selected[i] == fulldate) {
                       self.options.selected.splice(i, 1);
                       break;
                     }
