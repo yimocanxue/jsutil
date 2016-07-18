@@ -152,7 +152,7 @@
                             selectable = self.options.pastSelectable;
                         }
 
-                        if(~self.options.selected.indexOf(day)){
+                        if(~self.options.selected.indexOf(self.year +"-" + self.month  + "-" + day)){
                             day_class = 'selected';
                         }
                         if(self.year == current_year && self.month == current_month && day == current_date){
