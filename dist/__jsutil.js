@@ -880,6 +880,7 @@ var __URL = (function(win,undefined){
 
             this.elem.removeChild(this.elem.querySelector(".calendar-main"));   //先删除
 
+            this.options.selected = [];     //清空已选择日期
             this.setDateList(); 
 
             //重置回调
