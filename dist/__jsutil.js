@@ -1032,6 +1032,7 @@ var __URL = (function(win,undefined){
 
         setDayChecked:function(el)
         {
+            var self = this;
             var current_day = parseInt(el.innerHTML);
             var isSelect = el.classList.contains("selected") ? false : true;
             el.classList.toggle("selected");
