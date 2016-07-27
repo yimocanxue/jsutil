@@ -842,13 +842,16 @@ var __URL = (function(win,undefined){
 })(window);
 ;(function(win,doc,undefined){
     
+    var padding = parseInt(win.innerWidth) > 320 ? 18 : 17;
     var Calendar = function(options)
     {
         var self = this;
         var defaults = {
             month:'current',        //显示月份 默认为当前月份 next表示下月 last表示上月
+            canSelect: true,        //日历是否可选择
             selected:[],            //选中的日期 
-            daysOtps:[],            //针对具体日期的配置[{date:'2016-7-10',selectable:false,cls:'checking'},...]
+            selectedMax:-1,         //允许选中的最大日期数量 -1表示不限制
+            daysOpts:[],            //针对具体日期的配置[{date:'2016-7-10',selectable:false,cls:'checking'},...]
             pastSelectable:false,   //过期是否可选择？
             todaySelectable:false,  //今日是否可选择
             restCb:null,            //重置回调函数
@@ -915,6 +918,17 @@ var __URL = (function(win,undefined){
             self.setMonthShow();    //设置头部年月标题
             self.setDateList();
         },
+        setSelected:function(sel){
+            this.options.selected = sel;
+        },
+        setMaxDays:function(max){
+            if(isNaN(max))
+                return;
+            this.options.selectedMax = parseInt(max);
+        },
+        setCanSelect:function(can){
+            this.options.canSelect = can ? true : false;
+        },
         setWrap:function(){
             var elem = doc.createElement("div");
             elem.className = "cph-calendar";
@@ -926,9 +940,8 @@ var __URL = (function(win,undefined){
             var self = this;
             var monthDiv = doc.createElement("div");
             monthDiv.className = "calendar-month";
-            monthDiv.innerHTML = '<span class="mui-icon mui-icon-arrowleft"></span>'+
-                    '<b class="calendar-month-show"></b>'+
-                    '<span class="mui-icon mui-icon-arrowright"></span>';
+            monthDiv.innerHTML = '<b class="calendar-month-show"></b>'+
+                    '<span class="go-current">今日</span>';
             self.elem.appendChild(monthDiv);
 
             var weekDiv = doc.createElement("div");
@@ -936,13 +949,16 @@ var __URL = (function(win,undefined){
 
             weekDiv.innerHTML ='<a>日</a><a>一</a><a>二</a><a>三</a><a>四</a><a>五</a><a>六</a>';
             self.elem.appendChild(weekDiv);  
-
-            self.elem.querySelector(".mui-icon-arrowleft").addEventListener("tap",function(){
+            
+            self.elem.querySelector(".go-current").addEventListener("tap",function(){
                 self.goLastMonth();
+                var date = new Date();
+                self.reset(date.getFullYear(),date.getMonth());
             });
+            /*
             self.elem.querySelector(".mui-icon-arrowright").addEventListener("tap",function(){
                 self.goNextMonth();
-            });
+            });*/
         },
         goLastMonth:function(){
             var self = this;
@@ -957,12 +973,19 @@ var __URL = (function(win,undefined){
             self.reset(new_year,new_month);
         },
         setMonthShow:function(){
-            this.elem.querySelector(".calendar-month-show").innerHTML = this.year + ' / ' + (parseInt(this.month) + 1);            
+            this.elem.querySelector(".calendar-month-show").innerHTML = this.year + '年' + (parseInt(this.month) + 1)+"月";            
+        },
+        
+        setDaysOpts:function(opts){
+            var self = this;
+            self.options.daysOpts = opts;
+            var date = new Date();
+            self.reset(date.getFullYear(),date.getMonth());
         },
         setDateList:function(){
 
             var self = this;
-            var days = new Date(self.year,self.month + 1,0).getDate();
+            var days = new Date(self.year,self.month + 1,0).getDate();  //当月天数
 
             var daysDiv = doc.createElement("div");
             daysDiv.className = "calendar-main";
@@ -982,23 +1005,27 @@ var __URL = (function(win,undefined){
             self.maxLine = max_line;
             self.days = days;
 
-            var day = 1,fullDate,day_class,selectable;
+            var day = 1,fullDate,day_class,selectable,style,month;
             for(var i = 0;i < max_line * 7;i++){
                 var li = doc.createElement("li");
                 if(day <= days){
                     if(i >= week_start){
-                        li.innerHTML = day;
-                        fullDate = self.year +"-" + self.month  + "-" + day;        //完整日期
+                        style = day < 10 ? "style='padding:12px "+padding+"px;'":"";
+                        li.innerHTML = '<span '+style+'>'+day+'</span>';
+                        month = (parseInt(self.month)+1);
+                        fullDate = self.year +"-" + (month < 10 ? '0' + month : month)  + "-" + (day < 10 ? '0' + day :day);        //完整日期
                         day_class = '';
                         selectable = true;  //日历是否可选择
+                        //今天前的日期
                         if(current_year > self.year ||(current_year == self.year && current_month > self.month) || (current_year == self.year && current_month == self.month && current_date > day)){
                             day_class = 'pass';
                             selectable = self.options.pastSelectable;
                         }
-
+                        //默认选中的日期
                         if(~self.options.selected.indexOf(fullDate)){
                             day_class = 'selected';
                         }
+                        //今日
                         if(self.year == current_year && self.month == current_month && day == current_date){
                             selectable = self.options.todaySelectable;     
                             day_class = 'today';
@@ -1006,24 +1033,39 @@ var __URL = (function(win,undefined){
                         
 
                         //特殊日期的配置
-                        for(var j = self.options.daysOtps.length - 1 ; j >= 0 ; j--){
-                            if(self.options.daysOtps[j].date == fullDate){
-                                day_class = day_class + " " + self.options.daysOtps[j].cls;
-                                selectable = self.options.daysOtps[j].selectable;
+                        for(var j = self.options.daysOpts.length - 1 ; j >= 0 ; j--){
+                            if(self.options.daysOpts[j].date == fullDate){
+                                day_class = day_class + " " + self.options.daysOpts[j].cls;
+                                selectable = self.options.daysOpts[j].selectable;
                             }
                         }
 
                         li.className = day_class;
 
                         if(selectable){
-                            li.addEventListener("tap",function(e){
+                            li.addEventListener("tap",function(){
+                                //不可选择
+                                if(!self.options.canSelect)
+                                    return;
 
-                                var current_day = parseInt(this.innerHTML);
+                                var current_day = parseInt(this.querySelector("span").innerHTML);
                                 var isSelect = this.classList.contains("selected") ? false : true;
-                                
-                                self.setDayChecked(this);
+                                var current_m = (parseInt(self.month) + 1) ;
+                                var fulldate  = self.year +"-" + 
+                                                (current_m < 10 ? '0' + current_m : current_m) + "-" + 
+                                                (current_day < 10 ? '0' + current_day : current_day);
 
-                                var fulldate  = self.year +"-" + self.month  + "-" + current_day;
+                                //要选中时查看有无数量限制
+                                if(isSelect){
+     
+                                    if(self.options.selectedMax > -1){
+                                        if(self.getSelected().length >= self.options.selectedMax){
+                                            self.options.tapCb&&self.options.tapCb(this,fulldate,null);
+                                            return;
+                                        }
+                                    }
+                                }
+                                self.setDayChecked(this);
                                 self.options.tapCb&&self.options.tapCb(this,fulldate,isSelect);
                             });   
                         }
@@ -1046,18 +1088,22 @@ var __URL = (function(win,undefined){
         setDayChecked:function(el)
         {
             var self = this;
-            var current_day = parseInt(el.innerHTML);
+            var current_day = parseInt(el.querySelector("span").innerHTML);
             var isSelect = el.classList.contains("selected") ? false : true;
             el.classList.toggle("selected");
 
-            var fulldate  = self.year +"-" + self.month  + "-" + current_day;
+            var current_m = (parseInt(self.month) + 1) ;
+            var fulldate  = self.year +"-" + 
+                            (current_m < 10 ? '0' + current_m : current_m) + "-" + 
+                            (current_day < 10 ? '0' + current_day : current_day);
+
             if(isSelect){
                 self.options.selected.push(fulldate);
             }else{
                 for(var i=0; i < self.options.selected.length; i++) {
                     if(self.options.selected[i] == fulldate) {
-                      self.options.selected.splice(i, 1);
-                      break;
+                        self.options.selected.splice(i, 1);
+                        break;
                     }
                 }
             }
