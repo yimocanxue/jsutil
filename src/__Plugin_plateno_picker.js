@@ -7,6 +7,7 @@
     {
         this.cls = 'plugin-keyboard';
         this.elem = document.getElementById(arguments[0]);
+        this.inputCallback = arguments[1];
     };
 
     keyboardPicker.prototype = {
@@ -243,6 +244,8 @@
                     that.activeLi.innerHTML = char;
 
                     that.__nextLi();
+
+                    that.inputCallback && that.inputCallback(char,that.activeIndex - 1);
                     e.stopPropagation();
                 });
             }
@@ -301,7 +304,9 @@
 
     win.keyboardPicker = function()
     {
-        var picker = new keyboardPicker(arguments[0]);
+        //按键回调函数
+        var cb = (arguments.length > 1 && typeof arguments[1] === 'function') ? arguments[1] : null;
+        var picker = new keyboardPicker(arguments[0],cb);
         return picker.__init(arguments[1]||"");
     };
 

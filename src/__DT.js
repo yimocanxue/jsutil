@@ -241,4 +241,3 @@ Date.prototype.getCurrentStamp = function(unit_msec)
     return Math.round((new Date().getTime()) / 1000 );
 };
 
-
