@@ -73,17 +73,15 @@
 
             //输入框点击事件
             for(var i=0;i<childNodes.length;i++){
-                childNodes[i].addEventListener("tap",function(e){
+                // 此处事件必须绑定为click，否则无法关闭系统键盘
+                childNodes[i].addEventListener("click",function(e){
                     
                     //让其它输入框失去焦点，关闭系统键盘
                     that.__inputBlur();
 
                     var index = that.__getElemIndex(this,childNodes);
-    
                     that.__activeInput(index);
-
                     that.__showSoftKeyBorad(index);
-
                     e.stopPropagation();
                 });
             }
