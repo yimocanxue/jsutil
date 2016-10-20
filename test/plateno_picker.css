@@ -1,0 +1,83 @@
+.plugin-keyboard {
+  width: 100%;
+  background: #fff;
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  z-index: 999;
+  border-top: 1px solid #ccc;
+  padding: 4px 0;
+  display: none;
+}
+.plugin-keyboard > ul {
+  padding: 0;
+  margin: 0;
+  display: -webkit-box;
+  display: -moz-box;
+  display: -ms-flexbox;
+  display: -webkit-flex;
+  display: flex;
+}
+.plugin-keyboard > ul > li {
+  -webkit-box-flex: 1;
+  -moz-box-flex: 1;
+  -webkit-flex: 1;
+  -ms-flex: 1;
+  flex: 1;
+  list-style: none;
+  text-align: center;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background: #eee;
+  height: 30px;
+  margin: 4px 2px;
+  line-height: 30px;
+}
+.plugin-keyboard > ul > li:active {
+  border: 1px solid #1ccd7f;
+  background: #fff;
+}
+
+.plugin-keyboard-field {
+  display: inline-block;
+  width: 100%;
+  padding: 0 15px;
+  margin: 10px 0;
+}
+.plugin-keyboard-field > ul {
+  margin: 0;
+  padding-left: 0;
+  width: 100%;
+  position: relative;
+  display: -webkit-box;
+  display: -moz-box;
+  display: -ms-flexbox;
+  display: -webkit-flex;
+  display: flex;
+}
+.plugin-keyboard-field > ul > li {
+  width: 10%;
+  margin-left: 5%;
+  -webkit-box-flex: 1;
+  -moz-box-flex: 1;
+  -webkit-flex: 1;
+  -ms-flex: 1;
+  flex: 1;
+  text-align: center;
+  border: 1px solid #f1f1f1;
+  border-radius: 4px;
+  line-height: 1;
+}
+.plugin-keyboard-field > ul > li:before {
+  content: "";
+  vertical-align: middle;
+  display: inline-block;
+  padding-bottom: 100%;
+}
+.plugin-keyboard-field > ul > li:first-child {
+  margin-left: 0;
+}
+.plugin-keyboard-field > ul > li.selected {
+  border: 1px solid #1ccd7f;
+  background: #fff;
+}

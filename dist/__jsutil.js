@@ -1116,25 +1116,26 @@ var __URL = (function(win,undefined){
 */
 ;(function(win){
 
-    var keyboardPicker = function()
+    var keyboardPicker = function(elementId,inputCallback,readonly,plateno)
     {
         this.cls = 'plugin-keyboard';
-        this.elem = document.getElementById(arguments[0]);
-        this.inputCallback = arguments[1];
+        this.elem = document.getElementById(elementId);
+        this.inputCallback = inputCallback;
+        this.readonly = readonly;
+        this.plateno = plateno;
     };
 
     keyboardPicker.prototype = {
 
-        __init:function()
+        __init:function(plateno)
         {
-
             this.activeLi = null;
 
             this.__addInput();
             this.__bindEvent();
             this.__addStyle();
-            if(typeof arguments[0] == 'string' && arguments[0] !== '')
-                this.setPlateNo(arguments[0]);
+            if (this.plateno && typeof this.plateno === 'string')
+                this.setPlateNo(this.plateno);
 
             return this;
         },
@@ -1188,7 +1189,7 @@ var __URL = (function(win,undefined){
             for(var i=0;i<childNodes.length;i++){
                 // 此处事件必须绑定为click，否则无法关闭系统键盘
                 childNodes[i].addEventListener("click",function(e){
-                    
+                    if (that.readonly) return;
                     //让其它输入框失去焦点，关闭系统键盘
                     that.__inputBlur();
 
@@ -1201,7 +1202,8 @@ var __URL = (function(win,undefined){
 
             //点击其它区域关闭键盘
             document.addEventListener("tap",function(e){
-                that.__hideSoftKeyBorad();
+                if (e.target.parentNode != that.elem)
+                    that.__hideSoftKeyBorad();
             });
             return this;
         },
@@ -1414,13 +1416,36 @@ var __URL = (function(win,undefined){
 
     };
 
-
-    win.keyboardPicker = function()
+    /**
+     * 车牌选择器
+     * @param {Object} options 选项
+     * options.elementId {String}  元素ID，必填
+     * options.inputCallback {Function}  车牌键盘按键后的回调，选填
+     * options.readonly {Boolean}  车牌是否为只读, 选填
+     * options.plateno {String}  初始值车牌号，选填
+     */
+    win.keyboardPicker = function(options)
     {
-        //按键回调函数
-        var cb = (arguments.length > 1 && typeof arguments[1] === 'function') ? arguments[1] : null;
-        var picker = new keyboardPicker(arguments[0],cb);
-        return picker.__init(arguments[1]||"");
+        var opts = {
+            elementId: '',
+            inputCallback: null,
+            readonly: false,
+            plateno: ''
+        };
+        if (options) {
+            options.elementId && (opts.elementId=options.elementId);
+            options.readonly && (opts.readonly=options.readonly);
+            options.inputCallback && (opts.inputCallback=options.inputCallback);
+            options.plateno && (opts.plateno=options.plateno);
+        }
+        
+        var picker = new keyboardPicker(
+            opts.elementId,
+            opts.inputCallback,
+            opts.readonly,
+            opts.plateno
+        );
+        return picker.__init();
     };
 
 })(window);
