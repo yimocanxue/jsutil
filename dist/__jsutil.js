@@ -1229,6 +1229,8 @@ var __URL = (function(win,undefined){
                 this.activeIndex += 1;
                 this.__activeInput(this.activeIndex);
                 this.__showSoftKeyBorad(this.activeIndex);
+            } else {
+                this.__hideAllKeyboard();
             }
             return this;
         },
